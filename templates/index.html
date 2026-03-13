@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2FA Auth Demo</title>
+</head>
+<body>
+  <h1>2FA Authentication Demo</h1>
+
+  <h2>Sign Up</h2>
+  <input id="signup-email" type="email" placeholder="Enter email" />
+  <input id="signup-password" type="password" placeholder="Enter password" />
+  <button>Sign Up</button>
+
+  <h2>Login</h2>
+  <input id="login-email" type="email" placeholder="Enter email" />
+  <input id="login-password" type="password" placeholder="Enter password" />
+  <button>Login</button>
+
+  <h2>2FA Setup</h2>
+  <button>Enable 2FA</button>
+  <br /><br />
+  <input id="otp-code" type="text" placeholder="Enter 6-digit code" />
+  <button>Verify Code</button>
+
+  <p>This is only the first skeleton. Firebase is not connected yet.</p>
+
+  <script type="module" src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>
