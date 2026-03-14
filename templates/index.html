@@ -1,31 +1,240 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>2FA Auth Demo</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2FA Authentication Demo</title>
+
+<style>
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+font-family:Arial, sans-serif;
+}
+
+body{
+min-height:100vh;
+background:#f1f5f9;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:30px;
+}
+
+.container{
+width:100%;
+max-width:900px;
+display:grid;
+grid-template-columns:1fr 1fr;
+background:white;
+border-radius:20px;
+overflow:hidden;
+box-shadow:0 15px 40px rgba(0,0,0,0.08);
+}
+
+.left-panel{
+background:linear-gradient(135deg,#e0f2fe,#dbeafe);
+padding:50px 40px;
+display:flex;
+flex-direction:column;
+justify-content:center;
+}
+
+.left-panel h1{
+font-size:34px;
+margin-bottom:15px;
+color:#1e3a8a;
+}
+
+.left-panel p{
+color:#334155;
+line-height:1.6;
+}
+
+.badge{
+background:#2563eb;
+color:white;
+padding:7px 14px;
+border-radius:20px;
+font-size:13px;
+margin-bottom:18px;
+width:fit-content;
+}
+
+.right-panel{
+padding:35px 30px;
+}
+
+.section{
+margin-bottom:22px;
+padding:18px;
+border:1px solid #e2e8f0;
+border-radius:14px;
+background:#f8fafc;
+}
+
+.section h2{
+font-size:20px;
+margin-bottom:14px;
+color:#1e293b;
+}
+
+input{
+width:100%;
+padding:12px;
+border:1px solid #cbd5f5;
+border-radius:10px;
+margin-bottom:10px;
+font-size:14px;
+outline:none;
+transition:0.2s;
+}
+
+input:focus{
+border-color:#2563eb;
+box-shadow:0 0 0 3px rgba(37,99,235,0.15);
+}
+
+button{
+width:100%;
+border:none;
+border-radius:10px;
+padding:12px;
+font-size:15px;
+font-weight:600;
+cursor:pointer;
+margin-top:5px;
+transition:0.2s;
+}
+
+#signup-btn{
+background:#334155;
+color:white;
+}
+
+#signup-btn:hover{
+background:#1e293b;
+}
+
+#login-btn{
+background:#2563eb;
+color:white;
+}
+
+#login-btn:hover{
+background:#1d4ed8;
+}
+
+#enable-2fa-btn,
+#verify-otp-btn{
+background:#0ea5e9;
+color:white;
+}
+
+#enable-2fa-btn:hover,
+#verify-otp-btn:hover{
+background:#0284c7;
+}
+
+#qr-section,
+#otp-section{
+margin-top:15px;
+text-align:center;
+background:white;
+border:1px solid #e2e8f0;
+border-radius:12px;
+padding:15px;
+}
+
+#qr-image{
+max-width:200px;
+width:100%;
+border-radius:10px;
+border:1px solid #e2e8f0;
+padding:10px;
+}
+
+#otp-section p{
+margin-bottom:8px;
+color:#334155;
+font-weight:600;
+}
+
+#status{
+margin-top:12px;
+padding:12px;
+border-radius:10px;
+background:#eff6ff;
+color:#1e40af;
+font-weight:600;
+text-align:center;
+min-height:20px;
+}
+
+@media(max-width:820px){
+.container{
+grid-template-columns:1fr;
+}
+.left-panel{
+padding:35px 25px;
+}
+}
+</style>
 </head>
+
 <body>
-  <h1>2FA Authentication Demo</h1>
 
-  <h2>Sign Up</h2>
-  <input id="signup-email" type="email" placeholder="Enter email" />
-  <input id="signup-password" type="password" placeholder="Enter password" />
-  <button>Sign Up</button>
+<div class="container">
 
-  <h2>Login</h2>
-  <input id="login-email" type="email" placeholder="Enter email" />
-  <input id="login-password" type="password" placeholder="Enter password" />
-  <button>Login</button>
+<div class="left-panel">
+<span class="badge">Secure Access</span>
+<h1>Two-Factor Authentication</h1>
+<p>
+This demo shows how modern web apps secure login using
+email/password plus OTP verification through Google Authenticator.
+</p>
+</div>
 
-  <h2>2FA Setup</h2>
-  <button>Enable 2FA</button>
-  <br /><br />
-  <input id="otp-code" type="text" placeholder="Enter 6-digit code" />
-  <button>Verify Code</button>
+<div class="right-panel">
 
-  <p>This is only the first skeleton. Firebase is not connected yet.</p>
+<div class="section">
+<h2>Sign Up</h2>
+<input id="signup-email" type="email" placeholder="Enter email">
+<input id="signup-password" type="password" placeholder="Enter password">
+<button id="signup-btn">Create Account</button>
+</div>
 
-  <script type="module" src="{{ url_for('static', filename='main.js') }}"></script>
+<div class="section">
+<h2>Login</h2>
+<input id="login-email" type="email" placeholder="Enter email">
+<input id="login-password" type="password" placeholder="Enter password">
+<button id="login-btn">Login</button>
+</div>
+
+<div class="section">
+<h2>2FA Setup</h2>
+<button id="enable-2fa-btn">Enable 2FA</button>
+
+<div id="qr-section" style="display:none;">
+<h3>Scan this QR code</h3>
+<img id="qr-image" alt="QR Code">
+</div>
+
+<div id="otp-section" style="display:none;">
+<p>Enter the 6-digit OTP</p>
+<input id="otp-code" type="text" placeholder="Enter OTP">
+<button id="verify-otp-btn">Verify Code</button>
+</div>
+
+</div>
+
+<p id="status"></p>
+
+</div>
+</div>
+
+<script type="module" src="{{ url_for('static', filename='main.js') }}"></script>
+
 </body>
 </html>
