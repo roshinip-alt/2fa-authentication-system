@@ -15,11 +15,11 @@ Clean and responsive UI
 Tech Stack:
 Frontend:
 HTML 
-JavaScript
-Firebase Authentication
+ JavaScript
+ Firebase Authentication
 
 Backend: 
 Flask 
-PyOTP (TOTP generation & verification) 
-QRCode (QR code generation)
+ PyOTP (TOTP generation & verification) 
+ QRCode (QR code generation)
 
